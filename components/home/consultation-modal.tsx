@@ -6,6 +6,7 @@ import { Modal } from "@/components/common/modal";
 import { Button } from "@/components/common/button";
 import { useSiteStore } from "@/store/use-site-store";
 import { ConsultationFormData } from "@/types";
+import { translations } from "@/lib/translations";
 
 export const ConsultationModal: React.FC = () => {
   const {
@@ -16,7 +17,11 @@ export const ConsultationModal: React.FC = () => {
     isSubmissionSuccess,
     submitConsultation,
     resetConsultationState,
+    language,
   } = useSiteStore();
+
+  const t = translations[language].consultationModal;
+  const isRtl = language === "fa";
 
   const [formData, setFormData] = useState<ConsultationFormData>({
     fullName: "",
@@ -34,18 +39,18 @@ export const ConsultationModal: React.FC = () => {
 
     // Basic Validation
     if (!formData.fullName.trim()) {
-      setErrorMsg("لطفاً نام و نام خانوادگی خود را وارد کنید.");
+      setErrorMsg(t.errors.nameRequired);
       return;
     }
-    if (!formData.phoneNumber.trim() || formData.phoneNumber.length < 10) {
-      setErrorMsg("لطفاً یک شماره تماس معتبر وارد کنید.");
+    if (!formData.phoneNumber.trim() || formData.phoneNumber.length < 8) {
+      setErrorMsg(t.errors.phoneInvalid);
       return;
     }
 
     try {
       await submitConsultation(formData);
     } catch {
-      setErrorMsg("خطایی در ثبت درخواست رخ داد. لطفاً مجدداً تلاش فرمایید.");
+      setErrorMsg(t.errors.genericError);
     }
   };
 
@@ -68,12 +73,8 @@ export const ConsultationModal: React.FC = () => {
     <Modal
       isOpen={isConsultationModalOpen}
       onClose={handleClose}
-      title={isSubmissionSuccess ? undefined : "ثبت طرح، ایده و درخواست همکاری"}
-      description={
-        isSubmissionSuccess
-          ? undefined
-          : "اطلاعات اولیه خود را تکمیل کنید تا کارشناسان شتاب‌دهنده شریف کلینیک در اسرع وقت با شما تماس بگیرند."
-      }
+      title={isSubmissionSuccess ? undefined : t.title}
+      description={isSubmissionSuccess ? undefined : t.description}
       maxWidth="lg"
     >
       {isSubmissionSuccess ? (
@@ -83,16 +84,16 @@ export const ConsultationModal: React.FC = () => {
           </div>
 
           <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-            درخواست شما با موفقیت ثبت شد!
+            {t.successTitle}
           </h3>
 
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-            از حسن اعتماد شما متشکریم. تیم ارزیابی طرح‌های شریف کلینیک اطلاعات شما را بررسی کرده و حداکثر ظرف ۴۸ ساعت کاری با شما تماس خواهد گرفت.
+            {t.successDescription}
           </p>
 
           <div className="pt-4">
             <Button onClick={handleClose} className="w-full sm:w-auto px-8">
-              متوجه شدم
+              {t.successCta}
             </Button>
           </div>
         </div>
@@ -108,7 +109,7 @@ export const ConsultationModal: React.FC = () => {
           {/* Full Name */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              نام و نام خانوادگی <span className="text-red-500">*</span>
+              {t.fullNameLabel} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -117,7 +118,7 @@ export const ConsultationModal: React.FC = () => {
               onChange={(e) =>
                 setFormData({ ...formData, fullName: e.target.value })
               }
-              placeholder="مثال: دکتر علی رضایی"
+              placeholder={t.fullNamePlaceholder}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             />
           </div>
@@ -125,7 +126,7 @@ export const ConsultationModal: React.FC = () => {
           {/* Phone Number */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              شماره تلفن همراه <span className="text-red-500">*</span>
+              {t.phoneLabel} <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
@@ -135,15 +136,17 @@ export const ConsultationModal: React.FC = () => {
               onChange={(e) =>
                 setFormData({ ...formData, phoneNumber: e.target.value })
               }
-              placeholder="0912..."
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-right"
+              placeholder={t.phonePlaceholder}
+              className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+                isRtl ? "text-right" : "text-left"
+              }`}
             />
           </div>
 
           {/* Email */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              آدرس ایمیل (اختیاری)
+              {t.emailLabel}
             </label>
             <input
               type="email"
@@ -152,15 +155,17 @@ export const ConsultationModal: React.FC = () => {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              placeholder="name@example.com"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-right"
+              placeholder={t.emailPlaceholder}
+              className={`w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+                isRtl ? "text-right" : "text-left"
+              }`}
             />
           </div>
 
           {/* Type of Cooperation */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              موضوع همکاری
+              {t.cooperationTypeLabel}
             </label>
             <select
               value={formData.cooperationType}
@@ -172,17 +177,25 @@ export const ConsultationModal: React.FC = () => {
               }
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             >
-              <option value="startup_idea">ارائه ایده و ورود به استارتاپ استودیو</option>
-              <option value="investment">درخواست جذب سرمایه و شتابدهی</option>
-              <option value="hospital_integration">هوشمندسازی مرکز درمانی یا کلینیک</option>
-              <option value="general_inquiry">سایر همکاری‌های علمی و صنعتی</option>
+              <option value="startup_idea">
+                {t.cooperationOptions.startup_idea}
+              </option>
+              <option value="investment">
+                {t.cooperationOptions.investment}
+              </option>
+              <option value="hospital_integration">
+                {t.cooperationOptions.hospital_integration}
+              </option>
+              <option value="general_inquiry">
+                {t.cooperationOptions.general_inquiry}
+              </option>
             </select>
           </div>
 
           {/* Description */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              خلاصه طرح یا پیام شما
+              {t.descriptionLabel}
             </label>
             <textarea
               rows={3}
@@ -190,7 +203,7 @@ export const ConsultationModal: React.FC = () => {
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              placeholder="توضیح مختصری درباره چالش مورد نظر، راهکار و سطح پیشرفت طرح..."
+              placeholder={t.descriptionPlaceholder}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors resize-none"
             />
           </div>
@@ -203,7 +216,9 @@ export const ConsultationModal: React.FC = () => {
               className="w-full font-bold gap-2 text-sm shadow-md"
             >
               <Sparkles className="w-4 h-4" />
-              <span>ارسال و ثبت درخواست</span>
+              <span>
+                {isSubmitting ? t.submittingText : t.submitCta}
+              </span>
             </Button>
           </div>
         </form>

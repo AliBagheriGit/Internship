@@ -70,15 +70,15 @@ export const Modal: React.FC<ModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 rounded-xl p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          aria-label="بستن"
+          className="absolute end-4 top-4 rounded-xl p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         {(title || description) && (
-          <div className="mb-6 pl-8">
+          <div className="mb-6 pe-8">
             {title && (
               <h3 className="text-xl font-bold text-slate-900 dark:text-white leading-snug">
                 {title}

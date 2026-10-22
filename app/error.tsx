@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Link from "next/link";
 import { AlertTriangle, RotateCcw, Home } from "lucide-react";
 import { Button } from "@/components/common/button";
+import { useSiteStore } from "@/store/use-site-store";
 
 export default function ErrorBoundary({
   error,
@@ -11,8 +13,10 @@ export default function ErrorBoundary({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { language } = useSiteStore();
+  const isEn = language === "en";
+
   useEffect(() => {
-    // Log error to monitoring service
     console.error("Application error:", error);
   }, [error]);
 
@@ -25,25 +29,27 @@ export default function ErrorBoundary({
 
         <div className="space-y-2">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-            خطایی در بارگذاری رخ داد
+            {isEn ? "Something went wrong" : "خطایی در بارگذاری رخ داد"}
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            متأسفانه در اجرای این بخش از سامانه مشکلی به وجود آمده است. می‌توانید دوباره تلاش کنید یا به صفحه نخست بازگردید.
+            {isEn
+              ? "An unexpected error occurred while loading this section. You can try again or return to the home page."
+              : "متأسفانه در اجرای این بخش از سامانه مشکلی به وجود آمده است. می‌توانید دوباره تلاش کنید یا به صفحه نخست بازگردید."}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Button onClick={() => reset()} className="gap-2">
             <RotateCcw className="w-4 h-4" />
-            <span>تلاش مجدد</span>
+            <span>{isEn ? "Try Again" : "تلاش مجدد"}</span>
           </Button>
 
-          <a href="/">
+          <Link href="/">
             <Button variant="outline" className="gap-2">
               <Home className="w-4 h-4" />
-              <span>صفحه اصلی</span>
+              <span>{isEn ? "Home Page" : "صفحه اصلی"}</span>
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

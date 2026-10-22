@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { ConsultationModal } from "@/components/home/consultation-modal";
 import { ServiceDetailModal } from "@/components/home/service-detail-modal";
+import { LanguageSync } from "@/components/common/language-sync";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
@@ -46,6 +47,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className={`${vazirmatn.variable} h-full scroll-smooth`}>
       <body className="min-h-full flex flex-col antialiased selection:bg-blue-600 selection:text-white">
+        <LanguageSync />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -1,13 +1,15 @@
 "use client";
 
 import React from "react";
-import { Workflow, Rocket, Check, ArrowLeft, Layers, ShieldCheck } from "lucide-react";
-import { PATHWAYS_DATA } from "@/lib/data";
+import { Workflow, Rocket, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/common/button";
 import { useSiteStore } from "@/store/use-site-store";
+import { translations } from "@/lib/translations";
 
 export const DualPathwaysSection: React.FC = () => {
-  const { openConsultationModal } = useSiteStore();
+  const { openConsultationModal, language } = useSiteStore();
+  const t = translations[language].pathways;
+  const isRtl = language === "fa";
 
   return (
     <section id="pathways" className="py-20 bg-white dark:bg-slate-950 scroll-mt-16">
@@ -15,19 +17,19 @@ export const DualPathwaysSection: React.FC = () => {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span className="text-xs sm:text-sm font-bold text-sky-600 dark:text-sky-400 tracking-wider uppercase">
-            مدل‌های نوآوری و همکاری
+            {t.badge}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">
-            ما دو مسیر مکمل را دنبال می‌کنیم
+            {t.title}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
-            متناسب با اینکه شما صاحب ایده، تیم استارتاپی، پژوهشگر دانشگاهی یا مرکز درمانی باشید، بهترین ساختار همکاری را ارائه می‌دهیم.
+            {t.description}
           </p>
         </div>
 
         {/* Pathways Cards */}
         <div className="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          {PATHWAYS_DATA.map((pathway, idx) => {
+          {t.items.map((pathway, idx) => {
             const isStudio = pathway.id === "venture-studio";
 
             return (
@@ -47,7 +49,7 @@ export const DualPathwaysSection: React.FC = () => {
                     </div>
 
                     <span className="text-4xl font-black text-slate-200 dark:text-slate-800">
-                      ۰{idx + 1}
+                      {isRtl ? `۰${idx + 1}` : `0${idx + 1}`}
                     </span>
                   </div>
 
@@ -66,7 +68,7 @@ export const DualPathwaysSection: React.FC = () => {
                   {/* Highlights Bullet List */}
                   <div className="space-y-3 pt-4 border-t border-slate-200/80 dark:border-slate-800">
                     <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider block mb-2">
-                      محورهای کلیدی این مسیر:
+                      {t.keyHighlightsLabel}
                     </span>
                     {pathway.highlights.map((item, i) => (
                       <div key={i} className="flex items-start gap-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
@@ -91,11 +93,9 @@ export const DualPathwaysSection: React.FC = () => {
                     className="w-full justify-between"
                   >
                     <span>
-                      {isStudio
-                        ? "همکاری در خلق محصول و استودیو"
-                        : "درخواست جذب سرمایه و شتابدهی"}
+                      {isStudio ? t.studioCta : t.acceleratorCta}
                     </span>
-                    <ArrowLeft className="w-4 h-4" />
+                    {isRtl ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
                   </Button>
                 </div>
               </div>

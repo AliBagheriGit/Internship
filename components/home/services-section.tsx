@@ -11,12 +11,12 @@ import {
   BrainCircuit,
   GraduationCap,
   ArrowLeft,
+  ArrowRight,
   Layers,
 } from "lucide-react";
-import { SERVICES_DATA } from "@/lib/data";
 import { Badge } from "@/components/common/badge";
 import { useSiteStore } from "@/store/use-site-store";
-import { ServiceItem } from "@/types";
+import { translations } from "@/lib/translations";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Rocket,
@@ -29,22 +29,16 @@ const ICON_MAP: Record<string, React.ElementType> = {
   GraduationCap,
 };
 
-const CATEGORIES = [
-  { id: "all", label: "همه خدمات" },
-  { id: "startups", label: "استارتاپ‌ها و شتابدهی" },
-  { id: "centers", label: "مراکز درمانی و بیمارستان‌ها" },
-  { id: "patients", label: "پایش و مراقبت بیماران" },
-  { id: "technology", label: "فناوری‌های تشخیصی و دارو" },
-];
-
 export const ServicesSection: React.FC = () => {
-  const { activeServiceCategory, setActiveServiceCategory, setSelectedService } =
+  const { activeServiceCategory, setActiveServiceCategory, setSelectedService, language } =
     useSiteStore();
+  const t = translations[language].services;
+  const isRtl = language === "fa";
 
   const filteredServices = useMemo(() => {
-    if (activeServiceCategory === "all") return SERVICES_DATA;
-    return SERVICES_DATA.filter((item) => item.category === activeServiceCategory);
-  }, [activeServiceCategory]);
+    if (activeServiceCategory === "all") return t.items;
+    return t.items.filter((item) => item.category === activeServiceCategory);
+  }, [activeServiceCategory, t.items]);
 
   return (
     <section id="services" className="py-20 bg-slate-50 dark:bg-slate-900/60 scroll-mt-16">
@@ -52,25 +46,25 @@ export const ServicesSection: React.FC = () => {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span className="text-xs sm:text-sm font-bold text-blue-600 dark:text-sky-400 tracking-wider uppercase">
-            خدمات یکپارچه سلامت
+            {t.badge}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">
-            خدمات سلامت یکجا برای شما
+            {t.title}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
-            با چند کلیک، به هر سرویس سلامت، شتابدهی و ابزارهای فناورانه مورد نیاز خود دسترسی پیدا کنید.
+            {t.description}
           </p>
         </div>
 
         {/* Category Filter Pills */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-          {CATEGORIES.map((cat) => {
+          {t.categories.map((cat) => {
             const isActive = activeServiceCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setActiveServiceCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 select-none ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 select-none cursor-pointer ${
                   isActive
                     ? "bg-blue-600 text-white shadow-md shadow-blue-500/25"
                     : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -132,10 +126,14 @@ export const ServicesSection: React.FC = () => {
                 <div className="mt-6 pt-3 border-t border-slate-100 dark:border-slate-700/60">
                   <button
                     onClick={() => setSelectedService(service)}
-                    className="w-full inline-flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400 hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1 group/btn"
+                    className="w-full inline-flex items-center justify-between text-xs font-bold text-blue-600 dark:text-sky-400 hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1 group/btn cursor-pointer"
                   >
-                    <span>مشاهده جزئیات کامل</span>
-                    <ArrowLeft className="w-4 h-4 transform group-hover/btn:-translate-x-1 transition-transform" />
+                    <span>{t.viewDetailsCta}</span>
+                    {isRtl ? (
+                      <ArrowLeft className="w-4 h-4 transform group-hover/btn:-translate-x-1 transition-transform" />
+                    ) : (
+                      <ArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -147,7 +145,9 @@ export const ServicesSection: React.FC = () => {
         {filteredServices.length === 0 && (
           <div className="mt-12 text-center py-12 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8">
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              هیچ خدمتی در این دسته‌بندی یافت نشد.
+              {language === "fa"
+                ? "هیچ خدمتی در این دسته‌بندی یافت نشد."
+                : "No services found in this category."}
             </p>
           </div>
         )}

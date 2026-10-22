@@ -1,11 +1,21 @@
+"use client";
+
 import React from "react";
+import { useSiteStore } from "@/store/use-site-store";
+import { translations } from "@/lib/translations";
 
 interface LogoProps {
   className?: string;
   lightMode?: boolean;
 }
 
-export const SharifClinicLogo: React.FC<LogoProps> = ({ className = "h-10 w-auto", lightMode = false }) => {
+export const SharifClinicLogo: React.FC<LogoProps> = ({
+  className = "h-10 w-auto",
+  lightMode = false,
+}) => {
+  const { language } = useSiteStore();
+  const t = translations[language].common;
+
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
       {/* Icon Mark: Medical Cross & Tech Waves */}
@@ -13,7 +23,7 @@ export const SharifClinicLogo: React.FC<LogoProps> = ({ className = "h-10 w-auto
         <div className="w-full h-full bg-[#0a192f] rounded-[10px] flex items-center justify-center relative">
           {/* Subtle glow circle */}
           <div className="absolute inset-0 bg-blue-500/10 blur-[6px] rounded-full"></div>
-          
+
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -38,14 +48,14 @@ export const SharifClinicLogo: React.FC<LogoProps> = ({ className = "h-10 w-auto
             lightMode ? "text-white" : "text-slate-900 dark:text-white"
           }`}
         >
-          شریف کلینیک
+          {t.brandName}
         </span>
         <span
           className={`text-[10px] font-semibold tracking-wider uppercase mt-1 leading-none ${
             lightMode ? "text-sky-200" : "text-blue-600 dark:text-sky-400"
           }`}
         >
-          SHARIF HEALTH TECH STUDIO
+          {t.brandSubtitle}
         </span>
       </div>
     </div>

@@ -1,3 +1,5 @@
+export type Language = "fa" | "en";
+
 export interface ServiceItem {
   id: string;
   title: string;

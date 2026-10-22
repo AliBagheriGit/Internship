@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
-import { Sparkles, DollarSign, Award, Server, Users, ArrowLeft } from "lucide-react";
-import { INVESTMENT_PILLARS } from "@/lib/data";
+import { Sparkles, DollarSign, Award, Server, Users, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/common/button";
 import { useSiteStore } from "@/store/use-site-store";
+import { translations } from "@/lib/translations";
 
 const PILLAR_ICONS = [DollarSign, Award, Server, Users];
 
 export const InvestmentCtaSection: React.FC = () => {
-  const { openConsultationModal } = useSiteStore();
+  const { openConsultationModal, language } = useSiteStore();
+  const t = translations[language].investment;
+  const isRtl = language === "fa";
 
   return (
     <section id="investment" className="py-20 bg-gradient-to-br from-blue-950 via-[#0a192f] to-slate-950 text-white relative overflow-hidden scroll-mt-16">
@@ -19,19 +21,19 @@ export const InvestmentCtaSection: React.FC = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Right Column: Statement & CTA */}
+          {/* Main Statement & CTA */}
           <div className="lg:col-span-6 space-y-6">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-300 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>فرصتی نو برای نوآوران سلامت</span>
+              <span>{t.badge}</span>
             </span>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-tight text-white">
-              سرمایه‌گذاری در آینده سلامت دیجیتال ایران
+              {t.title}
             </h2>
 
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed text-justify">
-              اگر شما یا تیم شما ایده‌ای برای حل یک مسئله واقعی در نظام سلامت دارید — چه در تشخیص هوشمند با AI، چه مراقبت از راه دور و تله‌مدیسین، چه در داروسازی دیجیتال یا هر نقطه‌ای از زنجیره درمان — شریف کلینیک آماده است تا با حمایت جامع مالی، فنی و اعتبار بالینی همراهتان باشد.
+              {t.description}
             </p>
 
             <div className="pt-2 flex flex-wrap gap-4">
@@ -40,8 +42,8 @@ export const InvestmentCtaSection: React.FC = () => {
                 size="lg"
                 className="gap-2 shadow-xl shadow-blue-500/30 text-sm sm:text-base font-bold"
               >
-                <span>ارسال طرح اولیه و پیچ‌دک</span>
-                <ArrowLeft className="w-4 h-4" />
+                <span>{t.primaryCta}</span>
+                {isRtl ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
               </Button>
 
               <Button
@@ -50,14 +52,14 @@ export const InvestmentCtaSection: React.FC = () => {
                 size="lg"
                 className="text-sm sm:text-base"
               >
-                <span>درخواست جلسه هم‌افزایی</span>
+                <span>{t.secondaryCta}</span>
               </Button>
             </div>
           </div>
 
-          {/* Left Column: 4 Strategic Pillars */}
+          {/* 4 Strategic Pillars */}
           <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {INVESTMENT_PILLARS.map((pillar, idx) => {
+            {t.pillars.map((pillar, idx) => {
               const IconComp = PILLAR_ICONS[idx] || Sparkles;
 
               return (

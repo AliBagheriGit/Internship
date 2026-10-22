@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import { CircleDollarSign, Globe2, Stethoscope, LineChart } from "lucide-react";
-import { STATS_DATA } from "@/lib/data";
+import { useSiteStore } from "@/store/use-site-store";
+import { translations } from "@/lib/translations";
 
 const STAT_ICONS: Record<string, React.ElementType> = {
   CircleDollarSign,
@@ -10,25 +13,28 @@ const STAT_ICONS: Record<string, React.ElementType> = {
 };
 
 export const StatisticsSection: React.FC = () => {
+  const { language } = useSiteStore();
+  const t = translations[language].stats;
+
   return (
     <section id="stats" className="py-20 bg-slate-50 dark:bg-slate-900 scroll-mt-16 border-t border-slate-200/60 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span className="text-xs sm:text-sm font-bold text-blue-600 dark:text-sky-400 tracking-wider uppercase">
-            چشم‌انداز و بازار جهانی
+            {t.badge}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">
-            این حوزه نه یک فرصت، که یک ضرورت است
+            {t.title}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 text-justify sm:text-center leading-relaxed">
-            با توجه به گسترش روزافزون و فراگیر شدن سلامت دیجیتال در سطح جهان، داده‌های آماری زیر شتاب خیره‌کننده نفوذ فناوری در ارتقای شاخص‌های حیات را نمایان می‌سازند.
+            {t.description}
           </p>
         </div>
 
         {/* 4 Stats Cards Grid */}
         <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {STATS_DATA.map((stat) => {
+          {t.items.map((stat) => {
             const IconComp = STAT_ICONS[stat.icon] || LineChart;
 
             return (
